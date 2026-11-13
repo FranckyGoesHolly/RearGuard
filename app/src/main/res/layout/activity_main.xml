@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="#000000">
+
+        <TextureView
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <fr.rearguard.OverlayView
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#AA000000"
+            android:padding="8dp"
+            android:text="Aperçu arrêté"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Caméra à surveiller"
+                android:textColor="#B0BEC5" />
+
+            <Spinner
+                android:id="@+id/cameraSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="#263238" />
+
+            <TextView
+                android:id="@+id/sensitivityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Sensibilité"
+                android:textColor="#B0BEC5" />
+
+            <SeekBar
+                android:id="@+id/sensitivity"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:max="100" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/centerZone"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Seulement ma voie (centre de l'image)"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/btnPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Tester avec aperçu" />
+
+            <Button
+                android:id="@+id/btnBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lancer en arrière-plan" />
+
+            <Button
+                android:id="@+id/btnBeep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bip de test" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
