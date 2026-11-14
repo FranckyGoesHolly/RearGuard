@@ -34,7 +34,7 @@ class DetectionService : Service() {
 
         createChannel()
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA else 0
-        ServiceCompat.startForeground(this, NOTIF_ID, buildNotification("Surveillance active"), type)
+        ServiceCompat.startForeground(this, NOTIF_ID, buildNotification("Recherche de la caméra…"), type)
         isRunning = true
 
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager)

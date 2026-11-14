@@ -196,7 +196,6 @@ class MainActivity : AppCompatActivity() {
         try {
             camera = CameraSource(this, id, st, e::process) { msg -> runOnUiThread { status.text = msg } }
                 .also { it.start() }
-            status.text = "Caméra $id ouverte, analyse en cours…"
         } catch (ex: Exception) {
             status.text = "Impossible d'ouvrir la caméra $id : ${ex.message}"
             camera = null
