@@ -1,7 +1,10 @@
 package fr.rearguard
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import android.graphics.SurfaceTexture
 import android.os.Build
 import android.os.Bundle
@@ -69,6 +72,13 @@ class MainActivity : AppCompatActivity() {
             overlay.invalidate()
         }
 
+        val auto = findViewById<SwitchCompat>(R.id.autoStart)
+        auto.isChecked = Prefs.autoStart(this)
+        auto.setOnCheckedChangeListener { _, checked ->
+            Prefs.setAutoStart(this, checked)
+            if (checked) askOverlayPermission()
+        }
+
         btnPreview.setOnClickListener {
             if (camera != null) stopPreview() else startPreview()
         }
@@ -94,6 +104,35 @@ class MainActivity : AppCompatActivity() {
         }
 
         askPermissions()
+        handleAutostart(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleAutostart(intent)
+    }
+
+    /** Lancé par BootReceiver : démarre la surveillance puis se cache aussitôt. */
+    private fun handleAutostart(i: Intent?) {
+        if (i?.getBooleanExtra(EXTRA_AUTOSTART, false) != true) return
+        i.removeExtra(EXTRA_AUTOSTART)
+        val camOk = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        if (!camOk) return  // l'écran reste affiché pour que l'utilisateur accorde la permission
+        if (!DetectionService.isRunning) DetectionService.start(this)
+        moveTaskToBack(true)
+    }
+
+    /** Nécessaire sur Android 10+ pour que l'appli puisse se lancer seule au démarrage. */
+    private fun askOverlayPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || Settings.canDrawOverlays(this)) return
+        Toast.makeText(this, "Autorisez RearGuard à « s'afficher par-dessus les autres applis » pour le démarrage auto", Toast.LENGTH_LONG).show()
+        try {
+            startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
+        } catch (e: Exception) {
+            try { startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)) } catch (_: Exception) {
+                Toast.makeText(this, "Réglage introuvable : cherchez « Superposition » dans les paramètres", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     override fun onResume() {
@@ -213,5 +252,9 @@ class MainActivity : AppCompatActivity() {
     private fun refreshButtons() {
         btnPreview.text = if (camera != null) "Arrêter l'aperçu" else "Tester avec aperçu"
         btnBackground.text = if (DetectionService.isRunning) "Arrêter la surveillance" else "Lancer en arrière-plan"
+    }
+
+    companion object {
+        const val EXTRA_AUTOSTART = "autostart"
     }
 }

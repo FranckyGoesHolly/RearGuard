@@ -77,6 +77,13 @@
                 android:text="Seulement ma voie (centre de l'image)"
                 android:textColor="#FFFFFF" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/autoStart"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Démarrage automatique à l'allumage"
+                android:textColor="#FFFFFF" />
+
             <Button
                 android:id="@+id/btnPreview"
                 android:layout_width="match_parent"
